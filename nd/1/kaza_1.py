@@ -1,5 +1,4 @@
 import random
-
 import numpy as np
 import sympy as sp
 import matplotlib.pyplot as plt
@@ -24,7 +23,7 @@ print(f"{'-'*5} 2 uždavinys {'-'*5}")
 
 N = 3
 duotas = np.array([x for x in range(random.randint(0, 4), random.randint(7, 10))])
-rezultatas = np.tile(duotas, N) # jei nubutu numpy.ndarray tiesiog: masyvas * N
+rezultatas = np.tile(duotas, N)  # jei nubutu numpy.ndarray tiesiog: masyvas * N
 
 print(f"Duotas:     {duotas}")
 print(f"Rezultatas: {rezultatas}")
@@ -56,8 +55,8 @@ print(matrix)
 """
 print(f"{'-'*5} 5 uždavinys {'-'*5}")
 arr = np.zeros((8, 8))
-arr[::2, ::2] = 1   # lyginai i,j
-arr[1::2, 1::2] = 1 # nelyginiai i,j
+arr[::2, ::2] = 1  # lyginai i,j
+arr[1::2, 1::2] = 1  # nelyginiai i,j
 print(arr)
 
 
@@ -76,7 +75,7 @@ Užuominos - slicing, argsort, indexing.
 """
 print(f"{'-'*5} 7 uždavinys {'-'*5}")
 arr = np.random.rand(5, 5)
-i = np.argsort(arr[:, 1]) # grazina eiluciu indeksus, pagal didejancia antra stulpeli
+i = np.argsort(arr[:, 1])  # grazina eiluciu indeksus, pagal didejancia antra stulpeli
 arr = arr[i]
 print(arr)
 
@@ -103,30 +102,55 @@ print(f"Nympy funkcija:  {f}")
 print(f"Numpy išvestinė: {f_dx}")
 
 # Sympy
-x = sp.symbols('x')
-f = 0.5*x**2 + 5 * x + 4
+x = sp.symbols("x")
+f = 0.5 * x**2 + 5 * x + 4
 f_dx = sp.diff(f, x)
 print(f"Sympy funkcija:  {f}")
 print(f"Sympy išvestinė: {f_dx}")
 
 
 """
-10. 	Apskaičiuokite funkcijos e-x apibrėžtinį, intervale [0,1], ir neapibrėžtinį integralus.
+10. Apskaičiuokite funkcijos e-x apibrėžtinį, intervale [0,1], ir neapibrėžtinį integralus.
 """
 print(f"{'-'*5} 10 uždavinys {'-'*5}")
-x = sp.symbols('x')
+x = sp.symbols("x")
 f = sp.exp(-x)
 print(f"Neapibrėžtinis: {sp.integrate(f, x)}")
 print(f"Apibrėžtinis:   {sp.integrate(f, (x, 0, 1))}")
 
 
 """
-11. 	Pasinaudodami polinėmis koordinatėmis nupieškite kardioidę.
+11. Pasinaudodami polinėmis koordinatėmis nupieškite kardioidę.
 """
 print(f"{'-'*5} 11 uždavinys {'-'*5}")
 
+theta = np.linspace(0, 2 * np.pi, 1000)
+a = 0.9
+r = a * (1 + np.cos(theta))
+fig, ax = plt.subplots(figsize=(5, 5), subplot_kw={"projection": "polar"})
+ax.plot(theta, r)
+ax.set_ylim(0, 2)
+# ax.set_xlim(-0.5, 1)  # torto gabaliukas
+ax.set_yticks([0.5, 1, 1.5, 2])
+ax.set_rlabel_position(-22.5)
+ax.grid(True)
+plt.show()
 
 """
-12. 	Sugeneruokite masyvą iš 1000 atsitiktinių skaičių, pasiskirsčiusių pagal normalųjį dėsnį su duotais vidurkiu V ir dispersija D. Nupieškite jų histogramą
+12. Sugeneruokite masyvą iš 1000 atsitiktinių skaičių, pasiskirsčiusių pagal normalųjį dėsnį su duotais vidurkiu V ir dispersija D. Nupieškite jų histogramą
 """
 print(f"{'-'*5} 12 uždavinys {'-'*5}")
+
+V = 5
+D = 1
+n = 1000
+
+arr = np.random.normal(V, np.sqrt(D), n)
+
+plt.figure(figsize=(10, 6))
+plt.hist(arr, density=True, alpha=0.7, edgecolor="black")
+plt.xlabel("Elemento reikšmė")
+plt.ylabel("Dažnis")
+plt.title(f"Atsitiktinių reikšmių masyvas (μ={V}, σ={D})")
+plt.grid(True, alpha=0.3)
+plt.show()
