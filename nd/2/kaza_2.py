@@ -2,7 +2,6 @@ import json
 from pprint import pprint
 
 from pymongo import MongoClient
-from sympy.geometry.entity import x
 
 # {"address": {"building": "1007", "coord": [-73.856077, 40.848447], "street": "Morris Park Ave", "zipcode": "10462"}, "borough": "Bronx", "cuisine": "Bakery", "grades": [{"date": {"$date": 1393804800000}, "grade": "A", "score": 2}, {"date": {"$date": 1378857600000}, "grade": "A", "score": 6}, {"date": {"$date": 1358985600000}, "grade": "A", "score": 10}, {"date": {"$date": 1322006400000}, "grade": "A", "score": 9}, {"date": {"$date": 1299715200000}, "grade": "B", "score": 14}], "name": "Morris Park Bake Shop", "restaurant_id": "30075445"}
 # {"address": {"building": "469", "coord": [-73.961704, 40.662942], "street": "Flatbush Avenue", "zipcode": "11225"}, "borough": "Brooklyn", "cuisine": "Hamburgers", "grades": [{"date": {"$date": 1419897600000}, "grade": "A", "score": 8}, {"date": {"$date": 1404172800000}, "grade": "B", "score": 23}, {"date": {"$date": 1367280000000}, "grade": "A", "score": 12}, {"date": {"$date": 1336435200000}, "grade": "A", "score": 12}], "name": "Wendy'S", "restaurant_id": "30112340"}
@@ -17,7 +16,7 @@ def connect():
 
     except Exception as e:
         print(f"Error: {e}")
-        return None, None
+        exit(1)
 
 
 def insert_data(collection):
@@ -30,6 +29,7 @@ def insert_data(collection):
             print("Data inserted!")
     except Exception as e:
         print(f"Error: {e}")
+        exit(1)
 
 
 def display(results):
@@ -38,7 +38,7 @@ def display(results):
 
 def queries(collection):
     # 2. Parašykite užklausą atvaizduojančią visus dokumentus iš restoranų rinkinio
-    display([x for x in collection.find()])
+    # display([x for x in collection.find()])
 
     # # 3. Parašykite užklausą, kuri atvaizduotų laukus - restaurant_id, name, borough ir cuisine - visiems dokumentams
     # display(
@@ -84,25 +84,47 @@ def queries(collection):
     #     ]
     # )
 
-    # 6. Parašykite užklausą, kuri parodytų restoranus su bendru įvertinimu tarp 80 ir 100 (duomenis gali reikėti agreguoti).
+    # # 6. Parašykite užklausą, kuri parodytų restoranus su bendru įvertinimu tarp 80 ir 100 (duomenis gali reikėti agreguoti).
     # display(
     #     [
     #         x
-    #         for x in collection.find(
-    #             {"grades.score": {"$gte": 80, "$lte": 100}},
-    #             {
-    #                 "_id": 0,
-    #                 "restaurant_id": 1,
-    #                 "name": 1,
-    #                 "borough": 1,
-    #                 "cuisine": 1,
-    #                 "grades": 1,
-    #             },
+    #         for x in collection.aggregate(
+    #             [
+    #                 {"$addFields": {"bendras": {"$sum": "$grades.score"}}},
+    #                 {"$match": {"bendras": {"$gte": 80, "$lte": 100}}},
+    #                 {
+    #                     "$project": {
+    #                         "name": 1,
+    #                         "bendras": 1,
+    #                         "grades": 1,
+    #                         "cuisine": 1,
+    #                         "borough": 1,
+    #                     }
+    #                 },
+    #             ]
     #         )
     #     ]
     # )
 
-    # 7. Parašykite užklausą, kad cuisine būtų išdėstyta didėjimo tvarka, o borough - mažėjimo.
+    # # 7. Parašykite užklausą, kad cuisine būtų išdėstyta didėjimo tvarka, o borough - mažėjimo.
+    # display(
+    #     [
+    #         x
+    #         for x in collection.aggregate(
+    #             [
+    #                 {"$sort": {"cuisine": 1, "borough": -1}},
+    #                 {
+    #                     "$project": {
+    #                         "name": 1,
+    #                         "grades": 1,
+    #                         "cuisine": 1,
+    #                         "borough": 1,
+    #                     }
+    #                 },
+    #             ]
+    #         )
+    #     ]
+    # )
 
     pass
 
