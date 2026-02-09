@@ -4,19 +4,19 @@ command=$1
 
 case $command in
     run)
-        docker run -d --name restaurants -p 27017:27017 mongo
+        docker run -d --name pydb -p 27017:27017 mongo
         ;;
     kill)
-        docker kill restaurants
+        docker kill pydb
         ;;
     rm)
-        docker rm restaurants
+        docker rm pydb
         ;;
     shell)
-        docker exec -it restaurants mongosh
+        docker exec -it pydb mongosh
         ;;
     clean)
-        docker kill restaurants && docker rm restaurants
-        docker run -d --name restaurants -p 27017:27017 mongo
+        docker kill pydb && docker rm pydb
+        docker run -d --name pydb -p 27017:27017 mongo
         ;;
 esac
